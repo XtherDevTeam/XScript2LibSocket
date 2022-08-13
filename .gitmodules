@@ -1,0 +1,6 @@
+[submodule "Sources/Native/XScript2"]
+	path = Sources/Native/XScript2
+	url = http://www.xiaokang00010.top:4001/xiaokang00010/XScript2
+[submodule "Sources/Native/LibNetworking"]
+	path = Sources/Native/LibNetworking
+	url = http://www.xiaokang00010.top:4001/xiaokang00010/LibNetworking

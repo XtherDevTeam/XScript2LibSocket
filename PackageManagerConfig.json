@@ -1,0 +1,17 @@
+{
+    "Author": "Jerry Chou",
+    "BuildDir": "XPMBuildDir",
+    "Dependencies": [],
+    "Description": "XScript 2 LibSocket Bytecode-part",
+    "Name": "libsocket",
+    "Repository": "",
+    "SourcesDir": [
+        {
+            "IsExecutable": false,
+            "Name": "Socket",
+            "Path": "Sources/Main"
+        }
+    ],
+    "Type": "Project",
+    "XPMVersion": 0
+}
