@@ -59,7 +59,7 @@ jobs:
         run: |
           cd ${{github.workspace}}
           git clone https://github.com/XtherDevTeam/XScript2PackageManager.git
-          cd XScript2 ; git submodule update --init ; cd ..
+          cd XScript2PackageManager ; git submodule update --init ; cd ..
           cd Utils/XArchive ; git submodule update --init ; cd ../../
           cd Utils/XArchive ; git submodule update --init
           cmake -B ./cmake-build-debug -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
