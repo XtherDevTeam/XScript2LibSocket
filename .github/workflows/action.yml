@@ -41,7 +41,9 @@ jobs:
         run: cd ${{github.workspace}}/Sources/Native/cmake-build-debug ; make -j32
 
       - name: Packing
-        run: xpm build-project
+        run: |
+          xpm build-project
+          xpm pack-build-dir
 
       - name: Upload a Build Artifact
         uses: actions/upload-artifact@v3.1.0
@@ -79,7 +81,9 @@ jobs:
         run: cd ${{github.workspace}}/Sources/Native/cmake-build-debug ; make -j32
 
       - name: Packing
-        run: xpm build-project
+        run: |
+          xpm build-project
+          xpm pack-build-dir
 
       - name: Upload a Build Artifact
         uses: actions/upload-artifact@v3.1.0
