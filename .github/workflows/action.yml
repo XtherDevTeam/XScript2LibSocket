@@ -66,7 +66,7 @@ jobs:
           cd Utils/XArchive ; git submodule update --init ; cd ../../
           cmake -B ./cmake-build-debug -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -G "MinGW Makefiles"
           cd cmake-build-debug ; make -j32
-          echo "${{github.workspace}}/XScript2PackageManager/cmake-build-debug" >> $GITHUB_PATH
+          echo "${{github.workspace}}/XScript2PackageManager/cmake-build-debug" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
 
       - name: Initialize Submodules
         run: cd ${{github.workspace}}/Sources/Native/XScript2 ; git submodule update --init

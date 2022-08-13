@@ -26,11 +26,15 @@ file(GLOB SRC_FILES
         Share/*.cpp
         library.cpp library.h)
 
+if (CMAKE_HOST_SYSTEM_NAME MATCHES "Windows")
+        set(CMAKE_SHARED_LINKER_FLAGS "-static")
+endif ()
+
 add_library(socket SHARED ${NET_SRC_FILES} ${XS2_SDK_FILES} ${SRC_FILES})
 
 set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/../../XPMBuildDir/NativeLibraries)
 
 if (CMAKE_HOST_SYSTEM_NAME MATCHES "Windows")
     TARGET_LINK_LIBRARIES(socket wsock32 ws2_32)
-    set(CMAKE_EXE_LINKER_FLAGS "--static -lpthread")
+    set(CMAKE_SHARED_LINKER_FLAGS "--static -lpthread")
 endif ()
