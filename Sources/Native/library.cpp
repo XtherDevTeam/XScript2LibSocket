@@ -45,7 +45,7 @@ void SocketClient_connect(XScript::ParamToMethod Param) {
         PushClassObjectStructure(Interpreter, ConstructInternalErrorStructure(
                 Interpreter,
                 L"SocketError",
-                string2wstring(E.what())));
+                CovertToXString(String) + L": " + string2wstring(E.what())));
         Interpreter->InstructionFuncReturn((BytecodeStructure::InstructionParam) {(XIndexType) {}});
         return;
     }
