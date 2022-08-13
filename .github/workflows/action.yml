@@ -1,0 +1,120 @@
+name: Compile & Upload
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+env:
+  # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
+  BUILD_TYPE: Release
+
+jobs:
+  build-linux:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Compile XPM
+        run: |
+          cd ${{github.workspace}}
+          git clone https://github.com/XtherDevTeam/XScript2PackageManager.git
+          cd XScript2PackageManager
+          cmake -B ./cmake-build-debug -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
+          cd cmake-build-debug ; make -j32
+          echo "${{github.workspace}}/XScript2PackageManager/cmake-build-debug" >> $GITHUB_PATH
+
+      - name: Initialize Submodules
+        run: cd ${{github.workspace}}/Sources/Native/XScript2 ; git submodule update --init
+
+      - name: Initialize Submodules
+        run: cd ${{github.workspace}}/Sources/Native/LibNetworking ; git submodule update --init
+
+      - name: Configure CMake
+        run: cd ${{github.workspace}}/Sources/Native ; cmake -B./cmake-build-debug -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
+
+      - name: Build
+        run: cd ${{github.workspace}}/Sources/Native/cmake-build-debug ; make -j32
+
+      - name: Packing
+        run: xpm build-project
+
+      - name: Upload a Build Artifact
+        uses: actions/upload-artifact@v3.1.0
+        with:
+          name: linux-amd64-build
+          path: ${{github.workspace}}/XPMBuildDir/*.xar
+
+  build-windows:
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Compile XPM
+        run: |
+          cd ${{github.workspace}}
+          git clone https://github.com/XtherDevTeam/XScript2PackageManager.git
+          cd XScript2PackageManager
+          cmake -B ./cmake-build-debug -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
+          cd cmake-build-debug ; make -j32
+          echo "${{github.workspace}}/XScript2PackageManager/cmake-build-debug" >> $GITHUB_PATH
+
+      - name: Initialize Submodules
+        run: cd ${{github.workspace}}/Sources/Native/XScript2 ; git submodule update --init
+
+      - name: Initialize Submodules
+        run: cd ${{github.workspace}}/Sources/Native/LibNetworking ; git submodule update --init
+
+      - name: Configure CMake
+        run: cd ${{github.workspace}}/Sources/Native ; cmake -B./cmake-build-debug -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
+
+      - name: Build
+        run: cd ${{github.workspace}}/Sources/Native/cmake-build-debug ; make -j32
+
+      - name: Packing
+        run: xpm build-project
+
+      - name: Upload a Build Artifact
+        uses: actions/upload-artifact@v3.1.0
+        with:
+          name: windows-amd64-build
+          path: ${{github.workspace}}/XPMBuildDir/*.xar
+
+  build-macos:
+    runs-on: macos-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Compile XPM
+        run: |
+          cd ${{github.workspace}}
+          git clone https://github.com/XtherDevTeam/XScript2PackageManager.git
+          cd XScript2PackageManager
+          cmake -B ./cmake-build-debug -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
+          cd cmake-build-debug ; make -j32
+          echo "${{github.workspace}}/XScript2PackageManager/cmake-build-debug" >> $GITHUB_PATH
+
+      - name: Initialize Submodules
+        run: cd ${{github.workspace}}/Sources/Native/XScript2 ; git submodule update --init
+
+      - name: Initialize Submodules
+        run: cd ${{github.workspace}}/Sources/Native/LibNetworking ; git submodule update --init
+
+      - name: Configure CMake
+        run: cd ${{github.workspace}}/Sources/Native ; cmake -B./cmake-build-debug -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
+
+      - name: Build
+        run: cd ${{github.workspace}}/Sources/Native/cmake-build-debug ; make -j32
+
+      - name: Packing
+        run: xpm build-project
+
+      - name: Upload a Build Artifact
+        uses: actions/upload-artifact@v3.1.0
+        with:
+          name: macos-amd64-build
+          path: ${{github.workspace}}/XPMBuildDir/*.xar
