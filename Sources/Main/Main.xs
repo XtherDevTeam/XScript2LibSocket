@@ -1,1 +1,1 @@
-native_class SocketClient in "libsocket";
+native_class SocketClient in "NativeLibraries/libsocket";
