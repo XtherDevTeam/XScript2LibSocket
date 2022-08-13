@@ -4,6 +4,7 @@
 
 #include "library.h"
 #include "LibNetworking/Socket/SocketAddress.hpp"
+#include "LibNetworking/Utils/LibNetworkException.hpp"
 
 XScript::NativeLibraryInformation Initialize() {
     XScript::XMap<XScript::XIndexType, XScript::NativeMethodInformation> Methods;
@@ -38,7 +39,16 @@ void SocketClient_connect(XScript::ParamToMethod Param) {
     auto String = GetStringObject(
             *Interpreter,
             Interpreter->InterpreterEnvironment->Threads[Interpreter->ThreadID].Stack.PopValueFromStack());
-    Addr = LibNetworking::SocketAddress(wstring2string(CovertToXString(String)));
+    try {
+        Addr = LibNetworking::SocketAddress(wstring2string(CovertToXString(String)));
+    } catch (const LibNetworking::LibNetworkException &E) {
+        PushClassObjectStructure(Interpreter, ConstructInternalErrorStructure(
+                Interpreter,
+                L"SocketError",
+                string2wstring(E.what())));
+        Interpreter->InstructionFuncReturn((BytecodeStructure::InstructionParam) {(XIndexType) {}});
+        return;
+    }
 
     int SocketFd = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
     if (SocketFd == -1) {
