@@ -22,6 +22,8 @@ jobs:
           cd ${{github.workspace}}
           git clone https://github.com/XtherDevTeam/XScript2PackageManager.git
           cd XScript2PackageManager
+          cd XScript2 ; git submodule update --init
+          cd Utils/XArchive ; git submodule update --init
           cmake -B ./cmake-build-debug -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
           cd cmake-build-debug ; make -j32
           echo "${{github.workspace}}/XScript2PackageManager/cmake-build-debug" >> $GITHUB_PATH
@@ -58,6 +60,8 @@ jobs:
           cd ${{github.workspace}}
           git clone https://github.com/XtherDevTeam/XScript2PackageManager.git
           cd XScript2PackageManager
+          cd XScript2 ; git submodule update --init
+          cd Utils/XArchive ; git submodule update --init
           cmake -B ./cmake-build-debug -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
           cd cmake-build-debug ; make -j32
           echo "${{github.workspace}}/XScript2PackageManager/cmake-build-debug" >> $GITHUB_PATH
@@ -94,6 +98,8 @@ jobs:
           cd ${{github.workspace}}
           git clone https://github.com/XtherDevTeam/XScript2PackageManager.git
           cd XScript2PackageManager
+          cd XScript2 ; git submodule update --init
+          cd Utils/XArchive ; git submodule update --init
           cmake -B ./cmake-build-debug -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
           cd cmake-build-debug ; make -j32
           echo "${{github.workspace}}/XScript2PackageManager/cmake-build-debug" >> $GITHUB_PATH
