@@ -97,8 +97,8 @@ void SocketClient_receive(XScript::ParamToMethod Param) {
             L"__server_fd__")]].Value.IntegerValue;
 
     XInteger RecvSize = Interpreter->InterpreterEnvironment->Threads[Interpreter->ThreadID].Stack.PopValueFromStack().Value.IntVal;
-    EnvBytesObject *Buffer = CreateEnvBytesObject(RecvSize);
-    if (recv(static_cast<int>(SocketFileNo), &Buffer->Dest, RecvSize, 0) <= 0) {
+    std::string Buf(RecvSize, '\0');
+    if ((RecvSize = recv(static_cast<int>(SocketFileNo), Buf.data(), RecvSize, 0)) <= 0) {
         PushClassObjectStructure(Interpreter, ConstructInternalErrorStructure(
                 Interpreter,
                 L"SocketError",
@@ -106,7 +106,8 @@ void SocketClient_receive(XScript::ParamToMethod Param) {
         Interpreter->InstructionFuncReturn((BytecodeStructure::InstructionParam) {(XIndexType) {}});
         return;
     }
-
+    Buf.resize(RecvSize);
+    EnvBytesObject *Buffer = CreateEnvBytesObjectFromXBytes(Buf);
     Interpreter->InterpreterEnvironment->Threads[Interpreter->ThreadID].Stack.PushValueToStack(
             {
                     EnvironmentStackItem::ItemKind::HeapPointer,
