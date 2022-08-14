@@ -27,7 +27,7 @@ file(GLOB SRC_FILES
         library.cpp library.h)
 
 if (CMAKE_HOST_SYSTEM_NAME MATCHES "Windows")
-        set(CMAKE_SHARED_LINKER_FLAGS "-static")
+    set(CMAKE_SHARED_LINKER_FLAGS "-static")
 endif ()
 
 add_library(socket SHARED ${NET_SRC_FILES} ${XS2_SDK_FILES} ${SRC_FILES})

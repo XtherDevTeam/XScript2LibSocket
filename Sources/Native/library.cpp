@@ -5,6 +5,7 @@
 #include "library.h"
 #include "LibNetworking/Socket/SocketAddress.hpp"
 #include "LibNetworking/Utils/LibNetworkException.hpp"
+#include "LibNetworking/Utils/SocketAddressInvalid.hpp"
 
 XScript::NativeLibraryInformation Initialize() {
     XScript::XMap<XScript::XIndexType, XScript::NativeMethodInformation> Methods;
@@ -41,7 +42,7 @@ void SocketClient_connect(XScript::ParamToMethod Param) {
             Interpreter->InterpreterEnvironment->Threads[Interpreter->ThreadID].Stack.PopValueFromStack());
     try {
         Addr = LibNetworking::SocketAddress(wstring2string(CovertToXString(String)));
-    } catch (const LibNetworking::LibNetworkException &E) {
+    } catch (const LibNetworking::SocketAddressInvalid &E) {
         PushClassObjectStructure(Interpreter, ConstructInternalErrorStructure(
                 Interpreter,
                 L"SocketError",
@@ -97,7 +98,7 @@ void SocketClient_receive(XScript::ParamToMethod Param) {
 
     XInteger RecvSize = Interpreter->InterpreterEnvironment->Threads[Interpreter->ThreadID].Stack.PopValueFromStack().Value.IntVal;
     EnvBytesObject *Buffer = CreateEnvBytesObject(RecvSize);
-    if (recv(static_cast<int>(SocketFileNo), &Buffer->Dest, RecvSize, 0) == -1) {
+    if (recv(static_cast<int>(SocketFileNo), &Buffer->Dest, RecvSize, 0) <= 0) {
         PushClassObjectStructure(Interpreter, ConstructInternalErrorStructure(
                 Interpreter,
                 L"SocketError",
@@ -122,10 +123,8 @@ void SocketClient_send(XScript::ParamToMethod Param) {
             Interpreter->InterpreterEnvironment->Threads[Interpreter->ThreadID].Stack.Elements[
                     Interpreter->InterpreterEnvironment->Threads[Interpreter->ThreadID].Stack.FramesInformation.back().From].Value.HeapPointerVal
     ].Value.ClassObjectPointer;
-
     XInteger SocketFileNo = Interpreter->InterpreterEnvironment->Heap.HeapData[This->Members[Hash(
             L"__server_fd__")]].Value.IntegerValue;
-
     auto Buffer = Interpreter->InterpreterEnvironment->Heap.HeapData[
             Interpreter->InterpreterEnvironment->Threads[Interpreter->ThreadID].Stack.PopValueFromStack().Value.HeapPointerVal].Value.BytesObjectPointer;
 
