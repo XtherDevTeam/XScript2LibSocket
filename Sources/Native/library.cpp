@@ -15,6 +15,8 @@ XScript::NativeLibraryInformation Initialize() {
     Methods[XScript::Hash(L"receive")] = {2, SocketClient_receive};
     Methods[XScript::Hash(L"send")] = {2, SocketClient_send};
     Methods[XScript::Hash(L"close")] = {2, SocketClient_close};
+    Methods[XScript::Hash(L"getHostByName")] = {2, SocketClient_getHostByName};
+
     Classes[XScript::Hash(L"SocketClient")] = {L"SocketClient", Methods};
     return {
             L"Jerry Chou",
@@ -162,5 +164,28 @@ void SocketClient_close(XScript::ParamToMethod Param) {
         return;
     }
 
+    Interpreter->InstructionFuncReturn((BytecodeStructure::InstructionParam) {(XIndexType) {}});
+}
+
+void SocketClient_getHostByName(XScript::ParamToMethod Param) {
+    using namespace XScript;
+    auto *Interpreter = static_cast<BytecodeInterpreter *>(Param.InterpreterPointer);
+    try {
+        auto IPs = LibNetworking::NetworkAPI::GetIPAddressByHost(
+                wstring2string(CovertToXString(GetStringObject(
+                        *Interpreter,
+                        Interpreter->InterpreterEnvironment->Threads[Interpreter->ThreadID].Stack.PopValueFromStack())))
+        );
+        auto HeapIdx = Interpreter->InterpreterEnvironment->Heap.PushElement(
+                {
+                        EnvObject::ObjectKind::StringObject,
+                        (EnvObject::ObjectValue) CreateEnvStringObjectFromXString(string2wstring(IPs.front()))});
+        Interpreter->InterpreterEnvironment->Threads[Interpreter->ThreadID].Stack.PushValueToStack(
+                {EnvironmentStackItem::ItemKind::HeapPointer, (EnvironmentStackItem::ItemValue) HeapIdx});
+    } catch (const LibNetworking::LibNetworkException &E) {
+        PushClassObjectStructure(
+                Interpreter,
+                ConstructInternalErrorStructure(Interpreter, L"SocketError", string2wstring(E.what())));
+    }
     Interpreter->InstructionFuncReturn((BytecodeStructure::InstructionParam) {(XIndexType) {}});
 }

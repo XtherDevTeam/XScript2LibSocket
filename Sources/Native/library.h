@@ -46,4 +46,11 @@ void SocketClient_send(XScript::ParamToMethod Param);
  */
 void SocketClient_close(XScript::ParamToMethod Param);
 
+/**
+ * SocketClient.getHostByName(hostname)
+ * @function get IP address by hostname
+ * @param hostname Hostname
+ * @return A StringBuffer, IP address
+ */
+void SocketClient_getHostByName(XScript::ParamToMethod Param);
 #endif //NATIVE_LIBRARY_H
